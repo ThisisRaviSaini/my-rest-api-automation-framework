@@ -1,6 +1,7 @@
 package tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
@@ -11,6 +12,8 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import requestbody.UserRequestBody;
 import responsebody.UserResponseBody;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -149,10 +152,11 @@ public class UserTest {
         assertThat(roles.toString(), containsString("QA"));
         assertThat(roles.toString(), containsString("SDET"));
 
+
         // ---------------- NESTED CHILD OBJECT: address ----------------
         JsonNode address = user.get("address");
-        assertThat(address.get("city").asText(), equalTo("Gurgaon"));
-        assertThat(address.get("pincode").asInt(), is(122001));
+        assertThat("City is Wrong", address.get("city").asText(), equalTo("Gurgaon"));
+        assertThat("Pin code is Wrong", address.get("pincode").asInt(), is(122001));
 
         // ---------------- ARRAY OF OBJECTS: projects ----------------
         JsonNode projects = root.get("projects");
@@ -201,13 +205,26 @@ public class UserTest {
         assertThat(root.get("status").asText(),
                 allOf(notNullValue(), containsString("Success")));
 
+        // Ravi's Assertion Practice //
+
+        // If you want to use hasItem, convert roles first:
+        List<String> roleList = new ObjectMapper()
+                .convertValue(roles, new TypeReference<List<String>>() {
+                });
+        assertThat(roleList, hasItem("QA"));
 
 
+        //If you want to use hasItemInArray, convert roles first:
+        String[] rolesArray = new ObjectMapper()
+                .convertValue(roles, String[].class);
+
+        assertThat(rolesArray, hasItemInArray("QA"));
+        assertThat(rolesArray, hasItemInArray("SDET"));
 
 
 /*        System.out.println(userResponseBody.getCode());
-        System.out.println(userResponseBody.getStatus());
-        System.out.println(userResponseBody.getMessage());*/
+          System.out.println(userResponseBody.getStatus());
+          System.out.println(userResponseBody.getMessage());*/
 
         softAssert.assertEquals(userResponseBody.getCode(), "200");
         softAssert.assertEquals(userResponseBody.getStatus(), "Success");
