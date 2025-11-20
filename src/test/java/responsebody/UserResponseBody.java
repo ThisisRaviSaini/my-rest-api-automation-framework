@@ -32,10 +32,6 @@ public class UserResponseBody {
 
     @Override
     public String toString() {
-        return "UserResponseBody{" +
-                "code=" + code +
-                ", status='" + status + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return "UserResponseBody{" + "code=" + code + ", status='" + status + '\'' + ", message='" + message + '\'' + '}';
     }
 }

@@ -17,7 +17,6 @@ public class UserEndPoints {
     }
 
     public static Response getUser(String username){
-
         Response response= given().pathParam("username", username).when().get(Routes.getUrl);
         return response;
     }
