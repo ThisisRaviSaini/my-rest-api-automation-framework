@@ -10,7 +10,6 @@ public class UserEndPoints {
 
 
     public static Response createUser(UserRequestBody userRequestBody){
-
         Response response= given().contentType(ContentType.JSON)
                 .accept(ContentType.JSON).body(userRequestBody).when().post(Routes.postUrl);
         return response;
